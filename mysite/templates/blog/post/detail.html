@@ -1,30 +1,31 @@
 {% extends "blog/base.html" %}
+{% load blog_tags %}
 {% block title %}{{ post.title }}{% endblock %}
 {% block content %}
     <h1>{{ post.title }}</h1>
     <p class="date">
         Published {{ post.published }} by {{ post.author }}
     </p>
-    {{ post.body|linebreaks }}
-    <a href="{% url 'blog:share_post' post.id%}">Share with friends</a>
-        <h2>Similar posts</h2>
-        {% for similar in similar_posts %}
-            <p>
-                <a href="{{ similar.get_absolute_url }}"> {{ similar.title }}</a>
-            </p>
-        {% empty %}    
-            <p>There are no similar posts yet.</p>
-        {% endfor %}
+    {{ post.body|markdown }}
+    <a href="{% url 'blog:share_post' post.id %}">Share with friends</a>
+    <h2>Similar posts</h2>
+    {% for similar in similar_posts %}
+        <p>
+            <a href="{{ similar.get_absolute_url }}"> {{ similar.title }}</a>
+        </p>
+    {% empty %}
+        <p>There are no similar posts yet.</p>
+    {% endfor %}
     {% with comments.count as total_comments %}
-    <h2>{{ total_comments }} comment{{ total_comments|pluralize }}</h2>
+        <h2>{{ total_comments }} comment{{ total_comments|pluralize }}</h2>
     {% endwith %}
     {% for comment in comments %}
         <div class="comment">
-        <p class="info">
-            Comment {{ forloop.counter }} by {{ comment.name }}
-            {{ comment.created}}
-        </p>
-        {{ comment.body|linebreaks }}
+            <p class="info">
+                Comment {{ forloop.counter }} by {{ comment.name }}
+                {{ comment.created }}
+            </p>
+            {{ comment.body|linebreaks }}
         </div>
     {% endfor %}
     {% include 'blog/post/includes/comment_form.html' %}
