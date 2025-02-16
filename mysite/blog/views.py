@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.contrib.postgres.search import TrigramSimilarity, TrigramWordSimilarity
 from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404
@@ -105,3 +106,13 @@ def post_search(request):
                   {'form': form,
                    'query': query,
                    'results': results})
+
+#не используется пока что
+def user_total_posts(request,user_id=None):
+    total_posts = Post.publish.count()
+    user=None
+    if user_id:
+        user=get_object_or_404(User, id=user_id)
+        total_posts=user.blog_posts.count()
+    return render(request,'blog/base.html',{'total_posts':total_posts,'user':user})
+
