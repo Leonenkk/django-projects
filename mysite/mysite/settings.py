@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.postgres'
 ]
 
+SESSION_COOKIE_AGE= 60 *60 * 24 *30
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -146,4 +148,10 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL=EMAIL_HOST_USER
 
 LOGIN_REDIRECT_URL='/blog/'
-LOGOUT_REDIRECT_URL='/blog/'
+LOGIN_URL='/accounts/login/'
+# LOGOUT_REDIRECT_URL='/blog/'
+
+
+#media
+MEDIA_URL='/media/' #для обслуживания медиа
+MEDIA_ROOT=BASE_DIR/'media' #полный путь к папке

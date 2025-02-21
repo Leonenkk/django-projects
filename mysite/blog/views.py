@@ -77,7 +77,11 @@ def share_post(request, post_id):
 @require_POST
 def post_comment(request, post_id):
     post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
-    form = CommentForm(request.POST)
+    comment_post=request.POST.copy() #делаем копию,которую сможет изменять т.к объект QueryDict является неизменяемым
+    if request.user.is_authenticated:
+        comment_post['name'] = request.user.username #добавл имя и почту в копию данных post запроса
+        comment_post['email'] = request.user.email
+    form = CommentForm(data=comment_post)#отправл классический пост запрос, но уже с почтой и именем
     comment = None
     if form.is_valid():
         comment = form.save(commit=False)

@@ -8,23 +8,33 @@
 </head>
 <body>
 <div id="content">
+    {% if messages %}
+        {% for message in messages %}
+            {{ message.tag }} {{ message }}
+        {% endfor %}
+    {% endif %}
     {% block content %}
     {% endblock %}
 </div>
 <div id="sidebar">
     <h2>My blog</h2>
     <p>This is my blog.</p>
+    <p><a href="{% url 'blog:post_list' %}">Main page</a></p>
     <hr>
     {% if user.is_authenticated %}
         <p>Hi {{ user.username }}</p>
         <p>{% total_posts %} posts published here</p>
-        <form action="{% url 'logout' %}" method="post">
+        <form action="{% url 'accounts:logout' %}" method="post">
         {% csrf_token %}
+         <a href="{% url 'accounts:profile' %}">My profile</a>  
+            <br>
         <a href="#" onclick="parentNode.submit()">Log out</a>
         </form>
     {% else %}
         <p>You are not authenticated</p>
-        <a href="{% url 'login' %}">Log in</a>
+        <a href="{% url 'accounts:login' %}">Log in</a>
+            <br>
+        <a href="{% url 'accounts:signup' %}">Sign Up</a>
     {% endif %}
     <hr>
     <h3>Latest posts</h3>
