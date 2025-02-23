@@ -40,7 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'taggit',
     'social_django',
+    'django_bootstrap5',
 
+    #Api
+    'rest_framework',
+    'blog_api.apps.BlogApiConfig',
+    'django_filters',
+
+    #Apps
     'blog.apps.BlogConfig',
     'accounts.apps.AccountsConfig',
 
@@ -48,6 +55,21 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'django.contrib.postgres'
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+    ],
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 3,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        #'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+
+    ]
+
+}
 
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
 
@@ -137,7 +159,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL='static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

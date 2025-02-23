@@ -22,6 +22,7 @@ import accounts.urls
 import blog.urls
 from django.contrib.sitemaps.views import sitemap
 
+import blog_api.urls
 from blog.sitemaps import PostSitemap
 from mysite import settings
 
@@ -35,8 +36,10 @@ urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps},
          name='django.contrib.sitemaps.views.sitemap'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('auth/',include('social_django.urls', namespace='social')),
+    path('auth/', include('social_django.urls', namespace='social')),
+    path('api/', include(blog_api.urls)),
+    path("api-auth/", include("rest_framework.urls")),
 ]
 
 if settings.DEBUG:
-    urlpatterns +=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
