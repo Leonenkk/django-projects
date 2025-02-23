@@ -6,16 +6,22 @@ from accounts.models import Profile
 
 
 class SingUpForm(UserCreationForm):
-    username = forms.CharField(min_length=3, max_length=64)
-    email = forms.EmailField(max_length=254)
-    first_name = forms.CharField(max_length=64)
-    last_name = forms.CharField(max_length=64)
-    password1 = forms.CharField(min_length=8, max_length=64, widget=forms.PasswordInput)
-    password2 = forms.CharField(min_length=8, max_length=64, widget=forms.PasswordInput)
+    first_name = forms.CharField(max_length=100, widget=forms.TextInput(
+        attrs={"class": "form-control mb-1", 'placeholder': 'Enter First Name'}))
+    last_name = forms.CharField(max_length=100, widget=forms.TextInput(
+        attrs={"class": "form-control mb-1", 'placeholder': 'Enter Last Name'}))
+    username = forms.CharField(max_length=100, widget=forms.TextInput(
+        attrs={"class": "form-control mb-1", 'placeholder': 'Enter Username'}))
+    email = forms.EmailField(
+        widget=forms.TextInput(attrs={"class": "form-control mb-1", 'placeholder': 'Enter your E-Mail'}))
+    password1 = forms.CharField(max_length=50, widget=forms.PasswordInput(
+        attrs={"class": "form-control mb-1", 'placeholder': 'Enter password'}))
+    password2 = forms.CharField(max_length=50, widget=forms.PasswordInput(
+        attrs={"class": "form-control mb-1", 'placeholder': 'Confirm Password'}))
 
     class Meta:
         model = get_user_model()
-        fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -28,10 +34,11 @@ class SingUpForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     username = forms.CharField(max_length=100,
                                required=True,
-                               widget=forms.TextInput(attrs={'placeholder': 'Username'}))
+                               widget=forms.TextInput(attrs={"class": "form-control mb-1", 'placeholder': 'Username'}))
     password = forms.CharField(max_length=50,
                                required=True,
-                               widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
+                               widget=forms.PasswordInput(
+                                   attrs={"class": "form-control mb-1", 'placeholder': 'Password'}))
     remember_me = forms.BooleanField(required=False)
 
     class Meta:
@@ -41,13 +48,11 @@ class LoginForm(AuthenticationForm):
 
 
 class UserUpdateForm(forms.ModelForm):
-    username = forms.CharField(min_length=3,
-                               max_length=64,
+    username = forms.CharField(max_length=100,
                                required=True,
-                               widget=forms.TextInput())
-    email=forms.EmailField(max_length=254,
-                           required=True,
-                           widget=forms.TextInput())
+                               widget=forms.TextInput(attrs={"class": "form-control mb-1", 'placeholder': 'Username'}))
+    email = forms.EmailField(required=True,
+                             widget=forms.TextInput(attrs={"class": "form-control mb-1", 'placeholder': 'Email'}))
 
     class Meta:
         model = get_user_model()
@@ -55,9 +60,9 @@ class UserUpdateForm(forms.ModelForm):
 
 
 class ProfileUpdateForm(forms.ModelForm):
-    avatar=forms.ImageField(widget=forms.FileInput())
-    biography=forms.CharField(widget=forms.Textarea())
+    avatar = forms.ImageField(widget=forms.FileInput(attrs={"class": "form-control mb-1"}))
+    biography = forms.CharField(widget=forms.Textarea(attrs={"class": "form-control"}))
 
     class Meta:
-        model=Profile
-        fields=['avatar','biography']
+        model = Profile
+        fields = ['avatar', 'biography']

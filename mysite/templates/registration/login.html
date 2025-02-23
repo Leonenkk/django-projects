@@ -1,16 +1,26 @@
-{% extends 'blog/base.html' %}
-
-{% block title %}Login{% endblock %}
-
+{% extends "blog/base.html" %}
+{% block title %} Login {% endblock %}
 {% block content %}
-    <h2>Login</h2>
-    <a href="{% url 'social:begin' 'github' %}">Log In with Github</a>
-    <br>
-    <a href="{% url 'social:begin' 'google-oauth2' %}">Log In with Google</a>
-    <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-        <p><input type="submit" value="Login"></p>
+    <h2> Login </h2>
+    {% if form.errors %}
+        <div class="container d-flex align-items-center justify-content-center">
+            <div class="alert alert-warning alert-dismissible fade show w-50  d-block" role="alert">
+                {% for key, value in form.errors.items %}
+                    <strong>{{ value }}</strong>
+                {% endfor %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    {% endif %}
+    <a href="{% url 'accounts:signup' %}"  class="btn btn-link btn-lg active btn-block">SignUp</a>
+    <a href="{% url 'social:begin' 'github' %}"  class="btn btn-link btn-lg active btn-block">Log In with GitHub</a>
+    <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-link btn-lg active btn-block">Log In with Google</a>
+    <form method="post" class="form">
+        {{ form.username }}
+        {{ form.password }}
+        <div class="mb-1">Remember me: {{ form.remember_me }}</div>
+        {% csrf_token %}
+        <input type="submit" class="btn btn-primary btn-lg" value="Login">
     </form>
-    <p><a href="{% url 'password_reset' %}">Reset password</a></p>
+   <a href="{% url 'accounts:change_password' %}">Reset Password</a>
 {% endblock %}
