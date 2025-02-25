@@ -19,6 +19,7 @@ class CommentSerializer(serializers.Serializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
+    author=serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         fields=(
             'id',

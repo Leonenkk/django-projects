@@ -1,12 +1,14 @@
-{#{% load static %}#}
+{% load static %}
 {% load blog_tags %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>{% block title %}{% endblock %}</title>
     {% load django_bootstrap5 %}
-    {% bootstrap_css %}
-    {% bootstrap_javascript %}
+{#    {% bootstrap_css %}#}
+{#    {% bootstrap_javascript %}#}
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    
 </head>
 <body class="d-flex flex-column min-vh-100">
 <!-- Responsive navbar-->
@@ -102,5 +104,7 @@
     <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2024, Powered by
         Django</p></div>
 </footer>
+<script defer src="{% static 'js/bootstrap.js' %}" ></script>
+
 </body>
 </html>

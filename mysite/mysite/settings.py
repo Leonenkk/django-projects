@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'blog_api.apps.BlogApiConfig',
     'django_filters',
+    'rest_framework.authtoken',
+    'drf_spectacular',
 
     #Apps
     'blog.apps.BlogConfig',
@@ -64,11 +66,17 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 3,
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        #'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
 
-    ]
-
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Blog API Project',
+    'DESCRIPTION': 'A sample blog to learn about DRF',
+    'VERSION': '1.0.0',
+    # OTHER SETTINGS
 }
 
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 30

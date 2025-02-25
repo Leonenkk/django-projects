@@ -48,7 +48,7 @@ def post_detail(request, year, month, day, slug):
                    'form': form,
                    'similar_posts': similar_posts})
 
-
+#не надо
 class PostListView(ListView):
     queryset = Post.publish.all()
     paginate_by = 3
