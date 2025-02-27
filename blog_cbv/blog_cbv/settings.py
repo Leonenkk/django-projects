@@ -61,7 +61,7 @@ ROOT_URLCONF = 'blog_cbv.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -127,7 +127,7 @@ STATIC_ROOT=(BASE_DIR/'staticfiles')
 
 #media
 MEDIA_URL = '/media/'
-MEDIA_ROOT = (BASE_DIR / 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # Default primary key field type

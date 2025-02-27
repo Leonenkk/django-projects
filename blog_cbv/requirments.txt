@@ -6,4 +6,5 @@ django-mptt-admin==2.7.2
 dotenv==0.9.9
 pillow==11.1.0
 python-dotenv==1.0.1
+pytils==0.4.1
 sqlparse==0.5.3
