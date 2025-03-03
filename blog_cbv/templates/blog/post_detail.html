@@ -1,6 +1,6 @@
 {% extends 'main.html' %}
 {% block content %}
-        <img src={{ post.thumbnail.url }} alt={{ post.title }} width="250"/>
+        <img src="{{ post.trumbnail.url }}" alt="{{ post.title }}" width="250"/> 
         <strong>{{ post.title }}</strong>
         <p>{{ post.description }}</p>
         <p>{{ post.text }}</p>

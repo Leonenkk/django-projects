@@ -6,6 +6,9 @@ from django.shortcuts import reverse
 
 from apps.services.utils import unique_slugify
 
+class PostManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related('author','category').filter(status='PB')
 
 class Post(models.Model):
     STATUS_CHOICES = (
@@ -14,10 +17,10 @@ class Post(models.Model):
     )
     title = models.CharField(verbose_name='Название записи', max_length=255)
     slug = models.SlugField(verbose_name='URL', max_length=255, blank=True)
-    description = models.TextField(max_length=500, verbose_name='Краткок описание')
+    description = models.TextField(max_length=500, verbose_name='Краткоe описание')
     text = models.TextField(verbose_name='Полный текст записи')
     trumbnail = models.ImageField(
-        default='default.jpg',
+        default='images/thumbnails/site.png',
         upload_to='images/thumbnails/%Y/%m/%d/',
         blank=True,
         verbose_name='Фотографии поста',
@@ -46,6 +49,8 @@ class Post(models.Model):
                               on_delete=models.PROTECT,
                               related_name='posts',
                               verbose_name='Категория')
+    objects=models.Manager() #указываем если есть кастом мэнеджер
+    custom=PostManager()
 
     class Meta:
         db_table = 'blog_post'
@@ -53,7 +58,6 @@ class Post(models.Model):
         indexes = [models.Index(fields=['-create', '-fixed', 'status'])]
         verbose_name = 'Статья'
         verbose_name_plural = 'Статьи'
-
     def __str__(self):
         return f'{self.title} by {self.author}'
 
@@ -89,6 +93,10 @@ class Category(MPTTModel):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
         db_table = 'blog_category'
+
+    def get_absolute_url(self):
+        return reverse('blog:post_by_category',kwargs={'slug': self.slug})
+
 
     def __str__(self):
         return self.title

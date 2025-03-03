@@ -5,6 +5,7 @@ from pytils.translit import slugify
 def unique_slugify(instance, slug, slug_field):
     """
     Генератор уникальных SLUG для моделей, в случае существования такого SLUG.
+    instance0-бд, slug-поле для заполнение,slug_field- поле для хранения
     """
     model = instance.__class__
     unique_slug = slug_field

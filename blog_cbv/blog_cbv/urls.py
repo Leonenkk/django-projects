@@ -22,4 +22,9 @@ import apps.blog.urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.blog.urls',namespace='blog')),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('',include('apps.accounts.urls',namespace='accounts')),
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += path('__debug__/', include('debug_toolbar.urls')),

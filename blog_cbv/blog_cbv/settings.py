@@ -31,7 +31,7 @@ DEBUG =os.getenv('DEBUG')=='True'
 
 ALLOWED_HOSTS = []
 
-
+INTERNAL_IPS = ['127.0.0.1',]
 # Application definition
 
 INSTALLED_APPS = [
@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'apps.blog.apps.BlogConfig',
     'mptt',
     'django_mptt_admin',
+    'django_bootstrap5',
+    'debug_toolbar',
+    'apps.accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'blog_cbv.urls'
@@ -124,6 +128,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT=(BASE_DIR/'staticfiles')
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 #media
 MEDIA_URL = '/media/'
