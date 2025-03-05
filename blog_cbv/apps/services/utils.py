@@ -14,3 +14,5 @@ def unique_slugify(instance, slug, slug_field):
     elif model.objects.filter(slug=slug_field).exclude(id=instance.id).exists():
         unique_slug = f'{slugify(slug)}-{uuid4().hex[:8]}'
     return unique_slug
+
+

@@ -5,7 +5,13 @@
         <div class="card mb-3">
             <div class="row">
                 <div class="col-4">
-                    <img src="{{ post.trumbnail.url }}" class="card-img-top" alt="{{ post.title }}">
+                    {% if post.trumbnail %}
+                        <img src="{{ post.trumbnail.url }}" class="card-img-top" alt="{{ post.title }}">
+                    {% else %}
+                        <div class="d-flex align-items-center justify-content-center h-100">
+                            <p>Нет изображения</p>
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="col-8">
                     <div class="card-body">

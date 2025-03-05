@@ -6,9 +6,11 @@ from django.shortcuts import reverse
 
 from apps.services.utils import unique_slugify
 
+
 class PostManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().select_related('author','category').filter(status='PB')
+        return super().get_queryset().select_related('author', 'category').filter(status='PB')
+
 
 class Post(models.Model):
     STATUS_CHOICES = (
@@ -49,8 +51,8 @@ class Post(models.Model):
                               on_delete=models.PROTECT,
                               related_name='posts',
                               verbose_name='Категория')
-    objects=models.Manager() #указываем если есть кастом мэнеджер
-    custom=PostManager()
+    objects = models.Manager()  # указываем если есть кастом мэнеджер
+    custom = PostManager()
 
     class Meta:
         db_table = 'blog_post'
@@ -58,6 +60,7 @@ class Post(models.Model):
         indexes = [models.Index(fields=['-create', '-fixed', 'status'])]
         verbose_name = 'Статья'
         verbose_name_plural = 'Статьи'
+
     def __str__(self):
         return f'{self.title} by {self.author}'
 
@@ -95,8 +98,54 @@ class Category(MPTTModel):
         db_table = 'blog_category'
 
     def get_absolute_url(self):
-        return reverse('blog:post_by_category',kwargs={'slug': self.slug})
-
+        return reverse('blog:post_by_category', kwargs={'slug': self.slug})
 
     def __str__(self):
         return self.title
+
+
+class Comment(MPTTModel):
+    STATUS_CHOICES = (
+        ('PB', 'Опубликовано'),
+        ('DF', 'Черновик'),
+    )
+    post = models.ForeignKey(
+        Post,
+        verbose_name='Пост',
+        related_name='comments',
+        on_delete=models.CASCADE
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='comments_author',
+        verbose_name='Автор'
+    )
+    content = models.CharField(max_length=3000, verbose_name='Текст комментария')
+    time_create = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
+    time_update = models.DateTimeField(verbose_name='Время обновления', auto_now=True)
+    status = models.CharField(
+        choices=STATUS_CHOICES,
+        max_length=2,
+        default='PB',
+        verbose_name='Статус комментария'
+    )
+    parent = TreeForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        related_name='children',
+        null=True,
+        blank=True,
+        verbose_name='Родительский комментарий'
+    )
+
+    class MPTTMeta:
+        order_insertion_by = ['time_create']
+
+    class Meta:
+        ordering = ['-time_create']
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+
+    def __str__(self):
+        return f'{self.author}:{self.content[:50]}...' if len(self.content) > 50 else f'{self.author}:{self.content}'

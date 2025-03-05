@@ -1,8 +1,10 @@
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
 from django.urls import reverse_lazy
-from django.views.generic import DetailView, UpdateView
+from django.views.generic import DetailView, UpdateView, CreateView
 
-from apps.accounts.forms import ProfileUpdateForm, UserUpdateForm
+from apps.accounts.forms import ProfileUpdateForm, UserUpdateForm, UserRegistrationForm, UserLoginForm
 from apps.accounts.models import Profile
 
 
@@ -48,4 +50,33 @@ class ProfileUpdateView(UpdateView):
 
     def get_success_url(self):#тут object так как ссылаемся на только что обновл или созд объект
         return reverse_lazy('accounts:profile_detail',kwargs={'slug':self.object.slug})
+
+
+class UserRegistrationView(SuccessMessageMixin,CreateView):
+    template_name = 'accounts/user_register.html'
+    form_class=UserRegistrationForm
+    success_url = reverse_lazy('blog:post_list')
+    success_message = 'Вы успешно зарегистрировались. Можете войти на сайт!'
+
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        context['title']='Регистрация пользователя'
+        return context
+
+
+class UserLoginView(SuccessMessageMixin,LoginView):
+    template_name = 'accounts/user_login.html'
+    form_class = UserLoginForm
+    success_message = 'Добро пожаловать на сайт!'
+    next_page = 'blog:post_list'
+
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        context['title']='Авторизация пользователя'
+        return context
+
+class UserLogoutView(LogoutView):
+    next_page = 'blog:post_list'
+
+
 
