@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+
+from ckeditor_demo.settings import CKEDITOR_UPLOAD_PATH
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -47,6 +49,10 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'debug_toolbar',
     'apps.accounts.apps.AccountsConfig',
+    'taggit',
+    'django_recaptcha',
+    'ckeditor',
+    'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [
@@ -132,6 +138,15 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
+CKEDITOR_UPLOAD_PATH='uploads/'
+
+CKEDITOR_CONFIGS = {
+    'awesome_ckeditor': {
+        'toolbar': 'full',
+        'height': 300,
+    },
+}
+
 #media
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -142,5 +157,13 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+#recaptcha
+RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')
+
+
 
 #AUTH_USER_MODEL = 'blog.User' если модель пользовательская
+
+
+

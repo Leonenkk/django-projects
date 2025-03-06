@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+from django_recaptcha.fields import ReCaptchaField
 
 from apps.accounts.models import Profile
 
@@ -13,7 +14,7 @@ class UserUpdateForm(forms.ModelForm):
     last_name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control mb-1'}))
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ('username', 'email', 'first_name', 'last_name')
 
     def clean_email(self):
@@ -57,14 +58,18 @@ class UserRegistrationForm(UserCreationForm):
 
 
 class UserLoginForm(AuthenticationForm):
+
+    recaptcha = ReCaptchaField()
+
+    class Meta:
+        model=get_user_model()
+        fields=['username', 'password','recaptcha']
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].widget.attrs['placeholder'] = 'Логин пользователя'
+        self.fields['username'].widget.attrs['class'] = 'form-control'
         self.fields['password'].widget.attrs['placeholder'] = 'Пароль пользователя'
+        self.fields['password'].widget.attrs['class'] = 'form-control'
         self.fields['username'].label = 'Логин'
-        for field in self.fields:
-            self.fields[field].widget.attrs.update({
-                'class': 'form-control',
-                'autocomplete': 'off'
-            })
 

@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from mptt.models import TreeForeignKey, MPTTModel
 from django.shortcuts import reverse
+from taggit.managers import TaggableManager
 
 from apps.services.utils import unique_slugify
 
@@ -53,6 +54,7 @@ class Post(models.Model):
                               verbose_name='Категория')
     objects = models.Manager()  # указываем если есть кастом мэнеджер
     custom = PostManager()
+    tags=TaggableManager()
 
     class Meta:
         db_table = 'blog_post'
