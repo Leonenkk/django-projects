@@ -1,5 +1,5 @@
 from django import forms
-
+from django_ckeditor_5.widgets import CKEditor5Widget
 from apps.blog.models import Post, Comment
 
 
@@ -15,12 +15,14 @@ class PostForm(forms.ModelForm):
                 'class': 'form-control',
                 'autocomplete': 'off'
             })
+        self.fields['description'].widget = CKEditor5Widget(config_name='awesome_editor')
+        self.fields['text'].widget = CKEditor5Widget(config_name='awesome_editor')
+
 
 class PostUpdateForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields=PostForm.Meta.fields +['fixed']
-
+        fields = PostForm.Meta.fields + ['fixed']
 
     def __init__(self, *args, **kwargs):
         super(PostUpdateForm, self).__init__(*args, **kwargs)
@@ -30,10 +32,10 @@ class PostUpdateForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
-    parent=forms.IntegerField(widget=forms.HiddenInput,required=False)
+    parent = forms.IntegerField(widget=forms.HiddenInput, required=False)
     content = forms.CharField(label='', widget=forms.Textarea(
         attrs={'cols': 30, 'rows': 5, 'placeholder': 'Комментарий', 'class': 'form-control'}))
 
     class Meta:
         model = Comment
-        fields=['content']
+        fields = ['content']

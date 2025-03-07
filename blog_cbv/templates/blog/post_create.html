@@ -6,7 +6,7 @@
         <div class="card-title nth-card-title">
             <h4>Добавление статьи</h4>
         </div>
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" action="{% url 'blog:create_post' %}" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
             <div class="d-grid gap-2 d-md-block mt-2">

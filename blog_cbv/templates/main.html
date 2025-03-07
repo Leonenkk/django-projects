@@ -2,12 +2,14 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     {% load django_bootstrap5 %}
     <meta charset="UTF-8">
     <title>{{ title}}</title>
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
     <script  defer src="{% static 'js/bootstrap.js' %}"></script>
+    {{ form.media }}
 </head>
 <body class="d-flex flex-column min-vh-100">
 {% include 'header.html' %}

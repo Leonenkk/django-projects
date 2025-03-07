@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from apps.blog.models import Post, Category, Comment
+from apps.blog.models import Post, Category, Comment, Rating
 from django_mptt_admin.admin import DjangoMpttAdmin
 
 
@@ -21,4 +21,8 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(DjangoMpttAdmin):
+    pass
+
+@admin.register(Rating)
+class RatingAdmin(admin.ModelAdmin):
     pass

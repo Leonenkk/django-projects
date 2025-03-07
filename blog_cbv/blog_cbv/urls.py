@@ -23,8 +23,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.blog.urls',namespace='blog')),
     path('',include('apps.accounts.urls',namespace='accounts')),
+    path('ckeditor5/',include('django_ckeditor_5.urls')),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += path('__debug__/', include('debug_toolbar.urls')),
+    #urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

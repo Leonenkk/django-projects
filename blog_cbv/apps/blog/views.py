@@ -2,11 +2,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView,View
 from taggit.models import Tag
 
 from apps.blog.forms import PostForm, PostUpdateForm, CommentForm
-from apps.blog.models import Post, Category, Comment
+from apps.blog.models import Post, Category, Comment, Rating
 from apps.services.mixins import AuthorRequiredMixin
 
 
@@ -159,3 +159,37 @@ class PostByTagListView(ListView):
         context=super().get_context_data(**kwargs)
         context['title']=f'Статьи по тегу {self.tag.name}'
         return context
+
+
+class RatingCreateView(View):
+    model=Rating
+
+    def post(self, request, *args, **kwargs):
+        post_id=request.POST.get('post_id')
+        rating_value=int(request.POST.get('value'))
+        forwarded_for=request.META.get('HTTP_X_FORWARDED_FOR')
+        if forwarded_for:
+            ip_address=forwarded_for.split(',')[0]
+        else:
+            ip_address=request.META.get('REMOTE_ADDR')
+        user=request.user if request.user.is_authenticated else None
+
+        rating,created =self.model.objects.get_or_create(
+            post_id=post_id,
+            ip_address=ip_address,
+            defaults={'user': user,'value':rating_value}
+        )
+
+        if not created:
+            if rating.value == rating_value:# типо он нажал туда же, где уже стояла оценка, следовательно отменяет
+                rating.delete()
+            else:
+                rating.value=rating_value# поменял  с лайка на дизлайк
+                rating.user=user#лайки можно ставить и анонимно, это поле и поможет отследить, а вдруг зарегался
+                rating.save()
+        return JsonResponse({'rating_sum': rating.post.get_sum_rating()})
+
+
+
+
+
