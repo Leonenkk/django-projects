@@ -25,13 +25,13 @@ class UserUpdateForm(forms.ModelForm):
 
 
 class ProfileUpdateForm(forms.ModelForm):
-    birth_date = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control mb-1'}))
+    birth_day = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control mb-1'}))
     bio = forms.CharField(widget=forms.Textarea(attrs={'rows': 5, 'class': 'form-control mb-1'}))
     avatar = forms.ImageField(widget=forms.FileInput(attrs={'class': 'form-control mb-1'}))
 
     class Meta:
         model = Profile
-        fields = ('bio', 'birth_date', 'avatar')
+        fields = ('bio', 'birth_day', 'avatar')
 
 
 class UserRegistrationForm(UserCreationForm):

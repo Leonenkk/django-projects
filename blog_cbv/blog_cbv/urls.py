@@ -16,14 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+
+from apps.blog.feeds import LatestPostsFeed
 from blog_cbv import settings
 from django.conf.urls.static import static
 import apps.blog.urls
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    path('ckeditor5/', include('django_ckeditor_5.urls')),
+    path('feeds/latest/', LatestPostsFeed(), name='latest_post_feed'),
     path('', include('apps.blog.urls',namespace='blog')),
     path('',include('apps.accounts.urls',namespace='accounts')),
-    path('ckeditor5/',include('django_ckeditor_5.urls')),
 ]
 
 if settings.DEBUG:

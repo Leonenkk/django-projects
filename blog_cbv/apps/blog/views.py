@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404
-from django.views.generic import ListView, DetailView, CreateView, UpdateView,View
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, View
 from taggit.models import Tag
 
 from apps.blog.forms import PostForm, PostUpdateForm, CommentForm
@@ -93,10 +93,9 @@ class PostUpdateView(AuthorRequiredMixin, SuccessMessageMixin, UpdateView):
         return super().form_valid(form)
 
 
-
 class CommentCreateView(CreateView):
     form_class = CommentForm
-    model=Comment
+    model = Comment
 
     def dispatch(self, request, *args, **kwargs):
         print(f"🔹 {request.user} делает запрос на {request.path}")  # Логирование
@@ -139,57 +138,52 @@ class CommentCreateView(CreateView):
         return redirect(comment.post.get_absolute_url())
 
     def handle_no_permission(self):
-        print(f" Пользователь {self.request.user} не имеет доступа к {self.request.path}")#Логирование
+        print(f" Пользователь {self.request.user} не имеет доступа к {self.request.path}")  # Логирование
         return JsonResponse({'error': 'Необходимо авторизоваться для добавления комментариев'}, status=403)
 
 
 class PostByTagListView(ListView):
     template_name = 'blog/post_list.html'
     model = Post
-    context_object_name='posts'
+    context_object_name = 'posts'
     paginate_by = 2
-    tag=None
+    tag = None
 
     def get_queryset(self):
-        self.tag=get_object_or_404(Tag,slug=self.kwargs['tag'])
-        queryset=self.model.custom.filter(tags__slug=self.tag.slug)
-        return queryset      #посмореть почему при переходе на пост аж 18 запросов к бд
+        self.tag = get_object_or_404(Tag, slug=self.kwargs['tag'])
+        queryset = self.model.custom.filter(tags__slug=self.tag.slug)
+        return queryset  # посмореть почему при переходе на пост аж 18 запросов к бд
 
     def get_context_data(self, **kwargs):
-        context=super().get_context_data(**kwargs)
-        context['title']=f'Статьи по тегу {self.tag.name}'
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Статьи по тегу {self.tag.name}'
         return context
 
 
 class RatingCreateView(View):
-    model=Rating
+    model = Rating
 
     def post(self, request, *args, **kwargs):
-        post_id=request.POST.get('post_id')
-        rating_value=int(request.POST.get('value'))
-        forwarded_for=request.META.get('HTTP_X_FORWARDED_FOR')
+        post_id = request.POST.get('post_id')
+        rating_value = int(request.POST.get('value'))
+        forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
         if forwarded_for:
-            ip_address=forwarded_for.split(',')[0]
+            ip_address = forwarded_for.split(',')[0]
         else:
-            ip_address=request.META.get('REMOTE_ADDR')
-        user=request.user if request.user.is_authenticated else None
+            ip_address = request.META.get('REMOTE_ADDR')
+        user = request.user if request.user.is_authenticated else None
 
-        rating,created =self.model.objects.get_or_create(
+        rating, created = self.model.objects.get_or_create(
             post_id=post_id,
             ip_address=ip_address,
-            defaults={'user': user,'value':rating_value}
+            defaults={'user': user, 'value': rating_value}
         )
 
         if not created:
-            if rating.value == rating_value:# типо он нажал туда же, где уже стояла оценка, следовательно отменяет
+            if rating.value == rating_value:  # типо он нажал туда же, где уже стояла оценка, следовательно отменяет
                 rating.delete()
             else:
-                rating.value=rating_value# поменял  с лайка на дизлайк
-                rating.user=user#лайки можно ставить и анонимно, это поле и поможет отследить, а вдруг зарегался
+                rating.value = rating_value  # поменял  с лайка на дизлайк
+                rating.user = user  # лайки можно ставить и анонимно, это поле и поможет отследить, а вдруг зарегался
                 rating.save()
         return JsonResponse({'rating_sum': rating.post.get_sum_rating()})
-
-
-
-
-
