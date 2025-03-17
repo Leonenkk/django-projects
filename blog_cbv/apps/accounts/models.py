@@ -43,3 +43,18 @@ class Profile(models.Model):
         if last_seen is not None:
             return True
         return False
+
+
+
+class Project(models.Model):
+    name=models.CharField(verbose_name="Название проекта",help_text="Введите название проекта",max_length=200)
+    start_date=models.DateField(verbose_name="Дата начала проекта",help_text="Укажите дату начала проекта")
+    end_date=models.DateField(verbose_name="Дата окончания проекта",help_text="Укажите дату окончания проекта")
+    budget=models.DecimalField(verbose_name="Бюджет проекта",help_text="Введите бюджет проекта",max_digits=12,decimal_places=2)
+    progress=models.PositiveSmallIntegerField(verbose_name="Процент выполнения",help_text="Введите процент выполнения проекта")
+    description=models.TextField(verbose_name="Описание проекта",help_text="Введите описание проекта")
+    is_completed=models.BooleanField(verbose_name="Проект завершён",help_text="Укажите, завершён ли проект",default=False)
+    repository_url=models.URLField(verbose_name="URL репозитория",help_text="Введите URL репозитория проекта")
+    manager=models.CharField(verbose_name="Менеджер проекта",help_text="Введите имя менеджера проекта",max_length=50)
+    slug=models.SlugField(verbose_name="Слаг проекта",help_text="Введите слаг проекта",max_length=255,unique=True)
+
